@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.ReplyMapper">
+
+
+<insert id="insert">
+insert into replies (rno,bno,reply,replyer) values(seq_replies.nextval,#{bno},#{reply},#{replyer})
+</insert>
+
+<select id="read"	resultType="com.study.domain.ReplyVO">
+select * from replies where rno=#{rno}
+</select>
+
+<delete id="delete">
+delete from replies where rno=#{rno}
+</delete>
+
+<update id="update">
+
+update replies set reply=#{reply}, updatedate=sysdate where rno=#{rno}
+
+
+</update>
+
+
+<select id="getListWithPaging" resultType="com.study.domain.ReplyVO">
+
+<![CDATA[
+select rno,bno,reply,replyer,replyDate,updateDate,commentcnt
+from
+(		select /*INDEX(replies idx_replies)*/ 
+        rownum rn,rno,bno,reply,replyer,replyDate,updatedate,commentcnt
+        from replies
+        where bno=#{bno}
+        and rno>0 and rownum <= #{pg.pageNum} * #{pg.amount} 
+)
+		where rn > (#{pg.pageNum}-1) * #{pg.amount}
+ ]]>
+</select>
+
+
+<select id="getCountByBno" resultType="int">
+
+select count(rno) from replies where bno=#{bno} 
+
+</select>
+
+
+<update id="updateCommentCnt">
+
+update replies set commentcnt=commentcnt + #{amount} where rno=#{rno}
+
+</update>
+
+
+
+
+
+</mapper>

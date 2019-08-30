@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.BoardMapper">
+
+<select id="getList" resultType="com.study.domain.BoardVO"> 
+<![CDATA[ 
+select * from boards order by bno 
+]]> 
+</select>
+
+<insert id="insert">
+
+insert into boards (bno,title,content,writer) values(seq_boards.nextval,#{title},#{content},#{writer})
+
+</insert>
+
+<!--  							자동으로 추가되는 PK값을 알아야할때 사용하는 방식-->
+<insert id="insertSelectKey">
+
+<selectKey keyProperty="bno" order="BEFORE" resultType="long">
+select seq_boards.nextval from dual
+</selectKey>
+
+insert into boards (bno,title,content,writer) values(#{bno},#{title},#{content},#{writer})
+
+</insert>
+  
+ 
+ 
+ <select id="read" resultType="com.study.domain.BoardVO">
+ 
+ select * from boards where bno=#{bno}
+ 
+ </select>
+
+<delete id="delete">
+
+delete boards where bno=#{bno}
+
+</delete>
+
+
+<update id="update">
+
+update boards
+set title=#{title},
+	content=#{content},
+	writer=#{writer},
+	updateDate=sysdate
+	where bno=#{bno}
+ 
+
+</update>
+
+
+<select id="ListWithPaging" resultType="com.study.domain.BoardVO">
+
+<![CDATA[
+
+	select bno,title,content,writer,regdate,updatedate,replycnt
+	from(
+			select /*+INDEX_DESC(boards pk_boards)*/
+			rownum rn,bno,title,content,writer,regdate,updatedate,replycnt
+			from
+			boards
+			where
+]]>  
+     <trim prefix="(" suffix=") AND" prefixOverrides="OR">
+       <foreach item="type" collection="typeArr">
+     
+        <trim prefix="OR">
+           <choose>
+           		<when test="type == 'T'.toString()">
+           		  title like '%'||#{keyword}||'%'
+           		</when>
+           		
+   	       		<when test="type == 'C'.toString()">
+           		  content like '%'||#{keyword}||'%'
+           		</when>
+    
+           		<when test="type == 'W'.toString()">
+           		  writer like '%'||#{keyword}||'%'
+           		</when>
+            </choose>
+         </trim>
+        </foreach>
+      </trim>
+ 
+ <![CDATA[
+
+			rownum <= #{pageNum} * #{amount} 
+ 			)
+ 			where rn > (#{pageNum}-1) * #{amount}
+ ]]>
+
+
+
+</select>
+
+
+<select id="getTotalCount" resultType="int">
+
+select count(*) from boards where bno >0
+
+</select>
+
+
+<update id="updateReplyCnt">
+
+update boards set replycnt=replycnt + #{amount} where bno=#{bno}
+
+</update>
+
+
+
+
+
+
+</mapper>
+ 

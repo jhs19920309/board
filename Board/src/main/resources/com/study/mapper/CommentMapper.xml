@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.mapper.CommentMapper">
+
+
+<insert id="insert">
+
+insert into comments (cno,rno,recomment,commenter) 
+		    values(seq_comment.nextval,#{rno},#{recomment},#{commenter})
+
+
+</insert>
+
+<select id="read" resultType="com.study.domain.CommentVO"> 
+select * from comments where cno=#{cno} 
+</select>
+
+<delete id="delete">
+delete from comments where cno=#{cno}
+</delete>
+
+<update id="update">
+update comments set recomment=#{recomment},updatedate=sysdate where cno=#{cno}
+</update>
+
+
+<select id="getList" resultType="com.study.domain.CommentVO">
+select * from comments where rno=#{rno} order by cno desc
+</select>
+
+
+
+
+
+
+</mapper>
