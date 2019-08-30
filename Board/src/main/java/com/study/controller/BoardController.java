@@ -33,7 +33,7 @@ public class BoardController
 {
   @Autowired
      private BoardService service;
-  
+  //test
   @GetMapping({"/SignUpForm"})
   public void SignUpForm() {}
   
