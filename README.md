@@ -1,4 +1,4 @@
-# 1.스프링 시큐리티  AuthenticationManager / ProviderManager / AuthenticationProvider
+# 1-1스프링 시큐리티  AuthenticationManager / ProviderManager / AuthenticationProvider
 
  인증 처리는 **AuthenticationManager(인터페이스)** 의 authenticate 메소드가 수행한다
  <pre><code>
@@ -24,6 +24,5 @@
  AuthenticationProvider(인터페이스) 구현 클래스로 DaoAuthenticationProvider 클래스를 사용하게된다
  <hr>
  
- 
- 
+ # 1-2 스프링 시큐리티 DaoAuthenticationProvider / UserDetailsService / UserDetails / User 
  
