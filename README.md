@@ -1,12 +1,3 @@
-# board
-# 테스트
+# 1.스프링 시큐리티
 
-페이징 처리
- 
- <pre>
-<code>
-System.out.println("aa");
- System.out.println("aa");
- System.out.println("aa");System.out.println("aa");
-</code> 
-</pre>
+##### 인증 처리는 AuthenticationManager
