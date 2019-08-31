@@ -10,5 +10,8 @@
       
  ![image](https://user-images.githubusercontent.com/53259940/64058900-d5ba7d80-cbec-11e9-85ca-b5b399e48623.png)
  
+ <br>
  
- **ProviderManager(클래스)** 
+ **ProviderManager(클래스)** 는 authenticate 메소드 인증 구현을 **AuthenticationProvider(인터페이스)** 에게 위임한다
+ **AuthenticationProvider(인터페이스)** 구현체로 나의 경우에는 데이터베이스에서 사용자정보를 읽어와 인증정보를 처리하여    **DaoAuthenticationProvider(클래스)** 를 사용하게 됐다
+ 
