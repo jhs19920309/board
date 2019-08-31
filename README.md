@@ -22,6 +22,6 @@
  그러면 **ProviderManager(클래스)** 가 인증을 처리하기 위해 authenticate() 메소드를 실행하게 되고  
  이 메소드는 내부적으로 인증처리과정에서 AuthenticationProvider를 사용하고 디비를 인증처리과정에 사용할 경우  
  AuthenticationProvider(인터페이스) 구현 클래스로 DaoAuthenticationProvider 클래스를 사용하게된다
- 
+ <hr>
  
  
