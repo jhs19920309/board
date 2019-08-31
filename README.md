@@ -1,5 +1,4 @@
-# 1.스프링 시큐리티 
-## A )  
+# 1.스프링 시큐리티  AuthenticationManager / ProviderManager / AuthenticationProvider
 
  인증 처리는 **AuthenticationManager(인터페이스)** 의 authenticate 메소드가 수행한다
  <pre><code>
