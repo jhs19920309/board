@@ -280,3 +280,65 @@ public class ReplyEchoHandler extends TextWebSocketHandler
 }
 </code></pre>
 	
+	
+<pre><code>
+
+ var socket=null;
+ function connectWS(){
+  	
+  var ws=new WebSocket("ws://localhost:8080/replyEcho");
+  socket=ws;
+
+  ws.onopen=function(){ //커넥션이 연결됐을때 실행 
+  	console.log("info: connection opend.");
+  	 
+  };
+ //메시지 왔을때 실행
+ //	WebSocketSession.sendMessage(new TextMessage())로 보내와진 것을 뿌린다
+  ws.onmessage=function(event){ 
+  	console.log("Receiver Message :"+event.data+"\n");
+  	 
+  	$("#socketAlert").text(event.data);
+  	$("#socketAlert").css("display","block");
+  	  
+  	setTimeout(function(){
+   	$("#socketAlert").css("display","none") 	
+  	},3000);
+  };
+	//커넥션 끊어졌을때 실행
+  ws.onclose=function(event){
+  	console.log("Info: connection closed,");
+ 
+  	};
+	//에러 발생할때 실행
+  ws.onerror=function(err){console.log("Error:",err);};
+  }
+  
+  </code></pre>
+  ---
+  <pre><code>
+  댓글 버튼 눌렀을때 실행되는 함수
+  $("#replyBtn").on("click",function(e){
+  		
+  		e.preventDefault();
+  	
+       var replyWriter=$("input[name=replyWriter]").val();
+       var replyContent=$("textarea[name=replyContent]").val();
+       $("textarea[name=replyContent]").val("");
+       
+       var reply={reply:replyContent,replyer:replyWriter,bno:bnoValue};
+       
+       replyService.add(reply,function(result){ 
+    	   alert(result); 
+    	   showList(-1); 
+       });
+       
+       var boardWriter='<c:out value="${board.writer}"/>';
+         
+       if(socket){   	//댓글 등록과 동시에 게시글 작성자에게 알림을 보내기위함
+    	   socket.send("reply,"+replyWriter+","+boardWriter+","+bnoValue); //reply,댓글작성자,게시글작성자,글번호
+       }
+         
+  	}); /* End of reply inert func */
+  </code></pre>
+	
