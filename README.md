@@ -167,5 +167,39 @@
   추가적인 정보를 얻기위해 만든 MemverVO안에 email을 사용하기 위해서는 ${principal.member.email} 처럼 사용해야합니다.
   이유는 CustomUser클래스 안에 private MemberVO member도 같이 principal에 들어간 것이기 떄문에.
   **  
-	
+
+<hr>
+# 2 웹 소켓  
+
+웹 표준, 따로 import 하는 것이 없다  
+IE10+이상의 스팩부터 사용가능  
+사용자의 브라우저와 서버 사이에 인터렉티브한 통신 세션을 설정할 수 있게하는 기술 HTTP상에 존재  
+Full duplex 양쪽이 강하게 long polling돼있다  
+HTTP는 원래 서버에서 요청을 받고 응답을 주면 연결을 끊는다  
+웹소켓 사용시 연결을 끊지않고 지속적으로 연결상태를 유지한다.
+
+servlet-context.xml에 handsshake할 handler를 등록 한다  
+
+/replyEcho 로 누군가 접속을 하면 class=“”여기 클래스에서 소켓을 처리한다  
+
+핸드셰이크 인터셉터 = 로그인한 유저의 아이디를 알고싶고 세션을 사용하기위해  
+웹소켓세션에다가 HTTP세션을 올려야함 그래서 등록함 그래야 HTTP세션에 접근가능함  
+
+
+----
+extends TextWebSocket   
+
+3개의 메소드를 오버라이드 해야함
+
+1. 처음 클라이언트와 소켓이 연결되었을 때 수행되는 메소드
+2. 소켓에다가 어떤 메소드가 보냈을 때 수행되는 메소드
+3. 소켓연결을 끊을 때 수행되는 메소드
+ 
+<beans:~~~~
+
+onopen 이벤트 리스너 커넥션이 연결됬을 때 실행되는 부분
+
+
+
+
 	
