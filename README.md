@@ -140,4 +140,16 @@
 	User클래스는 다음의 생성자를 제공하므로 알맞은 생성자를 사용한다  
 	
 	* User(String username,String password,Collection<? extends GrantedAuthority> authorities)  
-	* User(String username,String password,boolean enabled,boolean accountNonExpired,boolean ~~~)  
+	* User(String username,String password,boolean enabled,boolean accountNonExpired,boolean ~~)  
+	
+	
+<hr>
+
+![image](https://user-images.githubusercontent.com/53259940/64074475-a8ea9100-cce6-11e9-88ab-49588dd55b90.png)  
+![image](https://user-images.githubusercontent.com/53259940/64074478-b7d14380-cce6-11e9-932a-d262db112992.png)  
+![image](https://user-images.githubusercontent.com/53259940/64074482-ca4b7d00-cce6-11e9-9464-926cf88dc456.png)  
+![image](https://user-images.githubusercontent.com/53259940/64074488-e2230100-cce6-11e9-83ed-aacd85d35a84.png)
+
+	
+	
+	
