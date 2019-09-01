@@ -341,4 +341,6 @@ public class ReplyEchoHandler extends TextWebSocketHandler
          
   	}); /* End of reply inert func */
   </code></pre>
+  
+![image](https://user-images.githubusercontent.com/53259940/64079282-aa38af80-cd20-11e9-8a05-bd06b911e8b3.png)
 	
