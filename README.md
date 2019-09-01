@@ -1,3 +1,10 @@
+# 게시판 기능들
+![image](https://user-images.githubusercontent.com/53259940/64079344-73af6480-cd21-11e9-881b-a56e9b43d720.png)
+![image](https://user-images.githubusercontent.com/53259940/64079362-a5283000-cd21-11e9-96a1-d997711d0f96.png)
+![image](https://user-images.githubusercontent.com/53259940/64079474-dead6b00-cd22-11e9-8a5f-2e2094229c0e.png)
+![image](https://user-images.githubusercontent.com/53259940/64079490-fdabfd00-cd22-11e9-814c-e13a666ffd55.png)
+
+
 # 1 스프링 시큐리티   
 
  1.Authentication은 사용자의 인증 여부, 사용자가 가진 권한(authority) , 이름 및 접근 주체에 대한 정보를 제공 한다  
