@@ -168,8 +168,7 @@
   이유는 CustomUser클래스 안에 private MemberVO member도 같이 principal에 들어간 것이기 떄문에.
   **  
 
-<hr>
-# 2 웹 소켓  
+ # 2 웹 소켓
 
 웹 표준, 따로 import 하는 것이 없다  
 IE10+이상의 스팩부터 사용가능  
@@ -178,28 +177,106 @@ Full duplex 양쪽이 강하게 long polling돼있다
 HTTP는 원래 서버에서 요청을 받고 응답을 주면 연결을 끊는다  
 웹소켓 사용시 연결을 끊지않고 지속적으로 연결상태를 유지한다.
 
-servlet-context.xml에 handsshake할 handler를 등록 한다  
+servlet-context.xml에 handshake할 handler를 등록 한다  
 
-/replyEcho 로 누군가 접속을 하면 class=“”여기 클래스에서 소켓을 처리한다  
+/replyEcho 로 클라이언트가 접속 하면 class="com.study.msg.ReplyEchoHandler"에 등록된 handler클래스에서 소켓을 처리한다.  
 
-핸드셰이크 인터셉터 = 로그인한 유저의 아이디를 알고싶고 세션을 사용하기위해  
-웹소켓세션에다가 HTTP세션을 올려야함 그래서 등록함 그래야 HTTP세션에 접근가능함  
-
-
-----
-extends TextWebSocket   
-
-3개의 메소드를 오버라이드 해야함
-
-1. 처음 클라이언트와 소켓이 연결되었을 때 수행되는 메소드
-2. 소켓에다가 어떤 메소드가 보냈을 때 수행되는 메소드
-3. 소켓연결을 끊을 때 수행되는 메소드
+<handshake-interceptor> = 로그인한 유저의 아이디를 알고싶고 세션을 사용하기위함    
+웹 소켓 세션에다가 HTTP세션을 올려야함 그래야 HTTP세션에 접근가능함  
  
-<beans:~~~~
+MessageHandler등록하기.  
+MessageHandler는 2가지로 나눌 수 있다.   
+TextWebSocketHandler와 BinaryWebSocketHandler  
+이 두가지는 이름으로 알 수 있듯이, Text Message/Binary Message를 각각 처리하는데 사용됨  
 
-onopen 이벤트 리스너 커넥션이 연결됬을 때 실행되는 부분
+**3개의 메소드를 오버라이드 해야함**  
+1. 처음 클라이언트와 소켓이 연결되었을 때 수행되는 메소드 -> afterConnectionEstablished
+2. 소켓에다가 어떤 메소드가 보냈을 때 수행되는 메소드      -> handleTextMessage
+3. 소켓연결을 끊을 때 수행되는 메소드			   -> afterConnectionCloesd
 
++ private String getId(WebSocketSession session) -> 처음 연결됐을때 Map에다가 유저 이름과 세션을 따로 저장하기위해  
+						    세션에 저장된(로그인유저만 세션연결) 아이디와 웹소켓 세션을 따로 저장함   
 
+![image](https://user-images.githubusercontent.com/53259940/64078728-4fe82080-cd19-11e9-8db5-95a3a207a225.png) 
 
-
+<pre><code>
+ 
+public class ReplyEchoHandler extends TextWebSocketHandler
+{
+  Map<String, WebSocketSession> userSessions = new HashMap<String, WebSocketSession>();
+  // 유저 아이디에 해당하는 웹 소켓 세션을 따로 저장하기 위함
+   
+  public void afterConnectionEstablished(WebSocketSession session) throws Exception 
+  {
+	  System.out.println("afterConnectionEstablised : " + session);
+	  if (session.getAttributes().keySet().size() == 4) {
+	//session.getAttributes를 실행 시 로그인한 유저에는 SPRING_SECURITY_CONTEXT키가 추가로 저장되어 4개의 키가된다
+	//로그인한 유저만 useSessions에 저장한다
+		  String senderId = getId(session); // SecuriyContext에서 로그인한 유저의 아이디를 가져온다
+		  this.userSessions.put(senderId, session); //저장소에 저장
+    } 
+  }
+ 
+  
+  public void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception 
+  {
+     
+      String msg = (String)message.getPayload();
+    
+      if (!StringUtils.isEmpty(msg)) { //메시지가 정상적으로 있다면 
+      
+      String[] strs = ((String)message.getPayload()).split(",");
+     //socket.send("reply,"+replyWriter+","+boardWriter+","+bnoValue); //reply,댓글작성자,게시글작성자,글번호
+     
+     if (strs != null && strs.length == 4) {
+        String cmd = strs[0];			
+        String replyWriter = strs[1];
+        String boardWriter = strs[2];
+        String bno = strs[3];
+        
+	//B가 A의 게시글에 댓글을 달았을때 A에게 알람이 가야한다
+	// 이 코드의 전제는 A가 세션에 연결중일때 알람을 보내는것.
+	
+        WebSocketSession boardWriterSession =userSessions.get(boardWriter); //B가 댓글단 게시글의 주인인 A의 세션 찾기
+        if ("reply".equals(cmd) && boardWriterSession != null) {
+          
+          TextMessage tmpMsg = new TextMessage(replyWriter + " 님이" + bno + "번 게시글에 댓글을 달았습니다!!");
+          boardWriterSession.sendMessage(tmpMsg);  //A에게 알람 보내기
+	  
+        } 
+      } 
+    } 
+  }
+ 
+  
+  public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+    System.out.println("afterConnectionClose: " + session + " : " + status);
+    
+    if (session.getAttributes().keySet().size() == 4) { 
+      SecurityContext sc = (SecurityContext)session.getAttributes().get("SPRING_SECURITY_CONTEXT"); 
+      String name = sc.getAuthentication().getName();
+      userSessions.remove(name);
+    } 
+  }
+ 
+  private String getId(WebSocketSession session) {
+	  
+    Map<String, Object> httpSession = session.getAttributes();    
+    SecurityContext sec = (SecurityContext)httpSession.get("SPRING_SECURITY_CONTEXT");
+    //로그인에 Spring-Security를 적용했기 때문에 유저의 정보를 SecurityContext에서 
+ 	
+	
+    String user = null;
+    
+    if (sec == null) { 
+      user = session.getId();
+    } else {
+      
+      user = sec.getAuthentication().getName();
+    }    
+    
+    return user;
+  }
+}
+</code></pre>
 	
