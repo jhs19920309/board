@@ -270,7 +270,7 @@ public class ReplyEchoHandler extends TextWebSocketHandler
 	  
     Map<String, Object> httpSession = session.getAttributes();    
     SecurityContext sec = (SecurityContext)httpSession.get("SPRING_SECURITY_CONTEXT");
-    //로그인에 Spring-Security를 적용했기 때문에 유저의 정보를 SecurityContext에서 
+    //로그인에 Spring-Security를 적용했기 때문에 유저의 정보를 SecurityContext에서 가져온다
  	
 	
     String user = null;
