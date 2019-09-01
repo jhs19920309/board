@@ -351,3 +351,12 @@ public class ReplyEchoHandler extends TextWebSocketHandler
   
 ![image](https://user-images.githubusercontent.com/53259940/64079282-aa38af80-cd20-11e9-8a05-bd06b911e8b3.png)
 	
+	
+# 이메일 인증
+
+**pom.xml에 관련 라이브러리를 받아준다**
+![image](https://user-images.githubusercontent.com/53259940/64079876-49ad7080-cd28-11e9-860e-f467f1acee86.png)
+
+**스프링 root-context.xml에 빈을 추가시켜준다**
+![image](https://user-images.githubusercontent.com/53259940/64079892-942eed00-cd28-11e9-9d4b-2f7ad64a1ca5.png)
+
