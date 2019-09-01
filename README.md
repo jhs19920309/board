@@ -156,6 +156,16 @@
 
 
 
-	
+1. CustomUserDetailsService를 사용하기위해 security-context.xml에 설정을 합니다.
+2. 결과론적으로 username을 받아서 데이터베이스에서 정보를 가져옵니다
+3. 데이터베이스에서 유저 정보를 가져올때 매핑 시켜줄 MemverVO를 설정시켜주고 + (여러개의 권한을 가질수 있다는 가정으로 authList)
+4. mapper를 통해 MemverVO가 전체적으로 세팅되면
+5. UserDetails를 구현해놓은 User클래스를 상속받은 CustomUser를 만들어 반환시켜줍니다.
+
+**중요한건 JSP에서 security 태그로 정보를 이용할떄  ${pricipal}을 사용하고 이 princiapl은 우리가 반환한 CustomUser를 말합니다
+  그래서 ${princiapl.username}을 사용하게되면  CustomUser 작성시 상속받은 User클래스의 username변수를 가져오게되고
+  추가적인 정보를 얻기위해 만든 MemverVO안에 email을 사용하기 위해서는 ${principal.member.email} 처럼 사용해야합니다.
+  이유는 CustomUser클래스 안에 private MemberVO member도 같이 principal에 들어간 것이기 떄문에.
+  **  
 	
 	
